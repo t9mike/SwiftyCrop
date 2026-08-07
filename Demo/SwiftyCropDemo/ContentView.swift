@@ -274,16 +274,7 @@ struct ContentView: View {
       allowAspectRatioResizing: allowAspectRatioResizing,
       minAspectRatio: minAspectRatio,
       maxAspectRatio: maxAspectRatio,
-      dismissesOnCompletion: dismissesOnCompletion,
-      colors: SwiftyCropConfiguration.Colors(
-        cancelButton: Color.primary,
-        interactionInstructions: Color.primary,
-        rotateButton: Color.primary,
-        resetRotationButton: Color.primary,
-        saveButton: Color.primary,
-        background: Color.primary,
-        cropHandle: Color.primary
-      )
+      dismissesOnCompletion: dismissesOnCompletion
     )
   }
 

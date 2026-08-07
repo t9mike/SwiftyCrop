@@ -36,13 +36,21 @@ extension View {
     }
   }
 
+  /// Tints the Liquid Glass background of a toolbar button.
+  /// A `.clear` tint keeps the plain glass look, so the system styling is left untouched.
+  /// Has no effect below iOS/visionOS/macOS 26, where there is no glass to tint.
   @ViewBuilder
-  func tintedGlassEffect() -> some View {
-    if #available(iOS 26, visionOS 26.0, macOS 26.0, *) {
+  func tintedGlassEffect(_ tint: Color) -> some View {
+    if tint == .clear {
+      self
+    } else if #available(iOS 26, visionOS 26.0, macOS 26.0, *) {
       #if os(iOS)
-        self.buttonStyle(GlassProminentButtonStyle())
+        // A manually applied `glassEffect` is ignored for buttons inside a real toolbar, so the
+        // prominent button style is the only way to tint them. It picks the icon color itself for
+        // contrast against the tint, so the configured foreground color has no effect on such a button.
+        self.buttonStyle(GlassProminentButtonStyle()).tint(tint)
       #elseif os(macOS)
-        self.glassEffect(.regular.tint(Color.accentColor).interactive())
+        self.glassEffect(.regular.tint(tint).interactive())
       #else
         self
       #endif
