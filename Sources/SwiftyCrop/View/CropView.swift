@@ -257,6 +257,7 @@ struct CropView: View {
         .foregroundStyle(configuration.colors.cancelButton)
       }
       .disabled(isCropping)
+      .tintedGlassEffect(configuration.colors.cancelButtonBackground)
     }
     if configuration.rotateImageWithButtons {
       RotationControlsView(
@@ -308,7 +309,7 @@ struct CropView: View {
         .foregroundStyle(configuration.colors.saveButton)
       }
       .disabled(isCropping)
-      .tintedGlassEffect()
+      .tintedGlassEffect(configuration.colors.saveButtonBackground)
     }
   }
 
@@ -458,6 +459,7 @@ struct RotationControlsView: ToolbarContent {
           .padding()
           .presentationCompactAdaptation(.popover)
         }
+        .tintedGlassEffect(configuration.colors.rotateButtonBackground)
       } else {
         Menu {
           rotationButtons()
@@ -487,6 +489,7 @@ struct RotationControlsView: ToolbarContent {
       Label("Rotate Left", systemImage: "rotate.left")
     }
     .foregroundStyle(configuration.colors.rotateButton)
+    .tintedGlassEffect(configuration.colors.rotateButtonBackground)
 
     Button {
       let numberOfFullCircles = Int(angle.degrees / 360)
@@ -500,6 +503,7 @@ struct RotationControlsView: ToolbarContent {
       Label("Reset Rotation", systemImage: "arrow.uturn.backward.circle")
     }
     .foregroundStyle(configuration.colors.resetRotationButton)
+    .tintedGlassEffect(configuration.colors.resetRotationButtonBackground)
     .opacity(isResetDisabled ? 0.3 : 1)
     .disabled(isResetDisabled)
 
@@ -512,6 +516,7 @@ struct RotationControlsView: ToolbarContent {
       Label("Rotate Right", systemImage: "rotate.right")
     }
     .foregroundStyle(configuration.colors.rotateButton)
+    .tintedGlassEffect(configuration.colors.rotateButtonBackground)
   }
 
   private var isResetDisabled: Bool {

@@ -317,13 +317,7 @@ struct ContentView: View {
       maxAspectRatio: maxAspectRatio,
       dismissesOnCompletion: dismissesOnCompletion,
       colors: SwiftyCropConfiguration.Colors(
-        cancelButton: Color.primary,
-        interactionInstructions: Color.primary,
-        rotateButton: Color.primary,
-        resetRotationButton: Color.primary,
-        saveButton: Color.primary,
-        background: backgroundColor.getValue(),
-        cropHandle: Color.primary
+        background: backgroundColor.getValue()
       )
     )
   }

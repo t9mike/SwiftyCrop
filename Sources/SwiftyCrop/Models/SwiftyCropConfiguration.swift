@@ -78,6 +78,14 @@ public struct SwiftyCropConfiguration {
   
   /// Creates a new instance of `Colors` that are used in the cropping view.
   /// - Note: Certain properties have different effects whether Liquid Glass is enabled or not.
+  ///   The foreground colors apply on every OS version, they only switch from coloring a button's text
+  ///   to coloring its icon once Liquid Glass is used. The `…Background` colors are glass only.
+  ///   On iOS, a button with a background other than `.clear` uses a prominent glass style that picks
+  ///   its icon color itself for contrast, so its foreground color has no effect there.
+  /// - Important: The toolbar is transparent, so button texts and icons are drawn on top of `background`
+  ///   instead of on a system bar. Prefer colors that contrast with `background` over color scheme
+  ///   dependent ones like `.primary`, which flip with the users appearance setting while `background`
+  ///   does not.
   ///
   /// - Parameters:
   ///   - cancelButton: The color for the cancel button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.

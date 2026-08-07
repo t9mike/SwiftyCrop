@@ -188,7 +188,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `progressLayerDelay` | `Duration`: How long cropping must remain in progress before the progress layer is shown. Use a short delay to avoid flashing it for fast crops. Defaults to `.zero`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
 | `fonts` | `Fonts`: Defines custom fonts for the buttons and instructions. Defaults to using system font. |
-| `colors` | `Colors`: Defines custom colors for the texts and background. Defaults to white text and black background. |
+| `colors` | `Colors`: Defines custom colors for the texts, buttons and background. Defaults to white text and black background. See [iOS 26 & Liquid Glass](#-ios-26--liquid-glass) for how the button colors behave with and without Liquid Glass. |
 
 Create a configuration like this:
 ```swift
@@ -218,6 +218,8 @@ let configuration = SwiftyCropConfiguration(
         cancelButton: Color.red,
         interactionInstructions: Color.white,
         saveButton: Color.blue,
+        // Only has an effect with Liquid Glass, where it tints the save button's glass background
+        saveButtonBackground: Color.yellow,
         background: Color.gray,
         zoomSlider: Color.white
     )
@@ -297,6 +299,18 @@ To adopt the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop re
 <p align="center">
     <img src="Assets/legacy_square.png" style="margin: auto; width: 250px"/>
 </p>
+
+### Colors
+
+The foreground colors of `SwiftyCropConfiguration.Colors` (`cancelButton`, `rotateButton`, `resetRotationButton`, `saveButton`) apply on every OS version. They color the button texts on older versions and the button icons with Liquid Glass.
+
+The matching `…Background` colors (`cancelButtonBackground`, `rotateButtonBackground`, `resetRotationButtonBackground`, `saveButtonBackground`) only have an effect with Liquid Glass, where they tint the glass background of a button. A `.clear` background, which is the default for every button except the save button, keeps the plain, untinted glass look.
+
+On iOS, a button with a background other than `.clear` is rendered with a prominent glass style, which picks the icon color itself so it contrasts with the tint. The foreground color of such a button therefore has no effect. With the default yellow save button background this results in a dark checkmark, for example.
+
+Since `texts` and `fonts` only apply to button texts, they have no effect with Liquid Glass either, as the buttons show icons there.
+
+> The toolbar itself is transparent, so button texts and icons are drawn on top of `background` rather than on a system bar. Pick colors that contrast with `background` and avoid color scheme dependent ones such as `.primary`, as those flip with the users appearance setting while `background` does not.
 
 ## 👨‍💻 Contributors
 
