@@ -61,10 +61,10 @@ struct CropView: View {
         }
       }
     }
-    .background(configuration.colors.background)
     // Scrolls the view up slightly so the blurred background of the toolbar is shown on a non-scrolling view
     // Helps with contrast between the toolbar title and the content behind it
     .scrollOffsetToolbarTrigger()
+    .background(configuration.colors.background)
     .toolbar {
       toolbarView
     }
