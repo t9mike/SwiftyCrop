@@ -14,6 +14,7 @@ final class SwiftyCropTests: XCTestCase {
       zoomSensitivity: 2,
       rectAspectRatio: 4/3,
       dismissesOnCompletion: false,
+      progressLayerDelay: .milliseconds(200),
       texts: SwiftyCropConfiguration.Texts(
         cancelButton: "Test 1",
         interactionInstructions: "Test 2",
@@ -43,6 +44,7 @@ final class SwiftyCropTests: XCTestCase {
     XCTAssertEqual(configuration.zoomSensitivity, 2)
     XCTAssertEqual(configuration.rectAspectRatio, 4/3)
     XCTAssertEqual(configuration.dismissesOnCompletion, false)
+    XCTAssertEqual(configuration.progressLayerDelay, .milliseconds(200))
 
     XCTAssertEqual(configuration.texts.cancelButton, "Test 1")
     XCTAssertEqual(configuration.texts.interactionInstructions, "Test 2")
@@ -64,6 +66,7 @@ final class SwiftyCropTests: XCTestCase {
     let configuration = SwiftyCropConfiguration()
 
     XCTAssertEqual(configuration.dismissesOnCompletion, true)
+    XCTAssertEqual(configuration.progressLayerDelay, .zero)
   }
 
   func testZoomSliderDefaults() {
