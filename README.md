@@ -184,6 +184,8 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `minAspectRatio` | `CGFloat`: The minimum allowed aspect ratio (width / height) when `allowAspectRatioResizing` is enabled. Defaults to `0.1`. |
 | `maxAspectRatio` | `CGFloat`: The maximum allowed aspect ratio (width / height) when `allowAspectRatioResizing` is enabled. Defaults to `10.0`. |
 | `dismissesOnCompletion` | `Bool`: Whether the cropping view dismisses itself after the save or cancel button was tapped. Set to `false` if the presenting view handles the dismissal itself. Defaults to `true`. |
+| `showsProgressLayer` | `Bool`: Whether a progress layer is shown while the cropped image is generated. Defaults to `true`. |
+| `progressLayerDelay` | `Duration`: How long cropping must remain in progress before the progress layer is shown. Use a short delay to avoid flashing it for fast crops. Defaults to `.zero`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
 | `fonts` | `Fonts`: Defines custom fonts for the buttons and instructions. Defaults to using system font. |
 | `colors` | `Colors`: Defines custom colors for the texts, buttons and background. Defaults to white text and black background. See [iOS 26 & Liquid Glass](#-ios-26--liquid-glass) for how the button colors behave with and without Liquid Glass. |
@@ -199,6 +201,8 @@ let configuration = SwiftyCropConfiguration(
     showsZoomSlider: false,
     zoomSensitivity: 1.0,
     rectAspectRatio: 4/3,
+    showsProgressLayer: true,
+    progressLayerDelay: .milliseconds(200),
     texts: SwiftyCropConfiguration.Texts(
         cancelButton: "Cancel",
         interactionInstructions: "Custom instruction text",
@@ -343,6 +347,8 @@ Thanks to [@andrewhanshaw](https://github.com/andrewhanshaw) for adding the aspe
 Another thanks to [@andrewhanshaw](https://github.com/andrewhanshaw) for overhauling the cropping UI with a native SwiftUI toolbar, native macOS window support and a unified Liquid Glass design 🛠️
 
 Thanks to [@ezathashim](https://github.com/ezathashim) for adding the zoom slider for input devices without pinch-to-zoom and for making the dismissal optional 🔍
+
+Thanks to [@jacklieblich](https://github.com/jacklieblich) for restoring the configured crop view background and for making the progress layer hideable and delayable ⏳
 
 ## 📃 License
 

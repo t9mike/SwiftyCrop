@@ -24,6 +24,7 @@ struct ContentView: View {
   @State private var minAspectRatio: CGFloat
   @State private var maxAspectRatio: CGFloat
   @State private var dismissesOnCompletion: Bool
+  @State private var backgroundColor: PresetBackgroundColors = .black
   @FocusState private var textFieldFocused: Bool
   @EnvironmentObject private var cropSession: CropSession
   #if os(macOS)
@@ -44,7 +45,34 @@ struct ContentView: View {
       }
     }
   }
-  
+
+  enum PresetBackgroundColors: String, CaseIterable {
+    case black = "Black"
+    case white = "White"
+    case gray = "Gray"
+    case blue = "Blue"
+    case primary = "Primary"
+
+    func getValue() -> Color {
+      switch self {
+      case .black:
+        .black
+
+      case .white:
+        .white
+
+      case .gray:
+        .gray
+
+      case .blue:
+        .blue
+
+      case .primary:
+        .primary
+      }
+    }
+  }
+
   init() {
     let defaultConfiguration = SwiftyCropConfiguration()
     _cropImageCircular = State(initialValue: defaultConfiguration.cropImageCircular)
@@ -146,6 +174,19 @@ struct ContentView: View {
           Toggle("Show zoom slider", isOn: $showsZoomSlider)
 
           Toggle("Dismiss on completion", isOn: $dismissesOnCompletion)
+
+          HStack {
+            Text("Background color")
+              .frame(maxWidth: .infinity, alignment: .leading)
+
+            Picker("backgroundColor", selection: $backgroundColor) {
+              ForEach(PresetBackgroundColors.allCases, id: \.self) { color in
+                Text(color.rawValue)
+              }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+          }
 
           HStack {
             Text("Max magnification")
@@ -274,7 +315,10 @@ struct ContentView: View {
       allowAspectRatioResizing: allowAspectRatioResizing,
       minAspectRatio: minAspectRatio,
       maxAspectRatio: maxAspectRatio,
-      dismissesOnCompletion: dismissesOnCompletion
+      dismissesOnCompletion: dismissesOnCompletion,
+      colors: SwiftyCropConfiguration.Colors(
+        background: backgroundColor.getValue()
+      )
     )
   }
 

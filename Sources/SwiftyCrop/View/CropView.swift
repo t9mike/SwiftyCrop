@@ -49,13 +49,22 @@ struct CropView: View {
     ZStack {
       cropImageView
       
-      if isCropping {
-        ProgressLayer(configuration: configuration, localizableTableName: localizableTableName)
+      if isCropping && configuration.showsProgressLayer {
+        if configuration.progressLayerDelay == .zero {
+          ProgressLayer(configuration: configuration, localizableTableName: localizableTableName)
+        } else {
+          DelayedProgressLayer(
+            configuration: configuration,
+            localizableTableName: localizableTableName,
+            delay: configuration.progressLayerDelay
+          )
+        }
       }
     }
     // Scrolls the view up slightly so the blurred background of the toolbar is shown on a non-scrolling view
     // Helps with contrast between the toolbar title and the content behind it
     .scrollOffsetToolbarTrigger()
+    .background(configuration.colors.background)
     .toolbar {
       toolbarView
     }

@@ -1,5 +1,34 @@
 import SwiftUI
 
+struct DelayedProgressLayer: View {
+  let configuration: SwiftyCropConfiguration
+  let localizableTableName: String
+  let delay: Duration
+
+  @State private var isVisible = false
+
+  var body: some View {
+    Group {
+      if isVisible {
+        ProgressLayer(configuration: configuration, localizableTableName: localizableTableName)
+      }
+    }
+    .task {
+      guard delay > .zero else {
+        isVisible = true
+        return
+      }
+
+      do {
+        try await Task.sleep(for: delay)
+        isVisible = true
+      } catch {
+        // Removing this view cancels the delay when cropping finishes quickly.
+      }
+    }
+  }
+}
+
 struct ProgressLayer: View {
   let configuration: SwiftyCropConfiguration
   let localizableTableName: String

@@ -15,6 +15,8 @@ public struct SwiftyCropConfiguration {
   public let minAspectRatio: CGFloat
   public let maxAspectRatio: CGFloat
   public let dismissesOnCompletion: Bool
+  public let showsProgressLayer: Bool
+  public let progressLayerDelay: Duration
   public let texts: Texts
   public let fonts: Fonts
   public let colors: Colors
@@ -172,6 +174,11 @@ public struct SwiftyCropConfiguration {
   ///   - dismissesOnCompletion: Whether the cropping view dismisses itself after the save or cancel button was tapped.
   ///   Set this to `false` if the presenting view handles the dismissal itself. Defaults to `true`.
   ///
+  ///   - showsProgressLayer: Whether a progress layer is shown while the cropped image is generated. Defaults to `true`.
+  ///
+  ///   - progressLayerDelay: How long cropping must remain in progress before the progress layer is shown.
+  ///   Use a short delay to avoid flashing the progress layer for fast crops. Defaults to `.zero`.
+  ///
   ///   - texts: `Texts` object when using custom texts for the cropping view.
   ///
   ///   - fonts: `Fonts` object when using custom fonts for the cropping view. Defaults to system.
@@ -190,6 +197,8 @@ public struct SwiftyCropConfiguration {
     minAspectRatio: CGFloat = 0.1,
     maxAspectRatio: CGFloat = 10.0,
     dismissesOnCompletion: Bool = true,
+    showsProgressLayer: Bool = true,
+    progressLayerDelay: Duration = .zero,
     texts: Texts = Texts(),
     fonts: Fonts = Fonts(),
     colors: Colors = Colors()
@@ -206,6 +215,8 @@ public struct SwiftyCropConfiguration {
     self.minAspectRatio = minAspectRatio
     self.maxAspectRatio = maxAspectRatio
     self.dismissesOnCompletion = dismissesOnCompletion
+    self.showsProgressLayer = showsProgressLayer
+    self.progressLayerDelay = progressLayerDelay
     self.texts = texts
     self.fonts = fonts
     self.colors = colors
