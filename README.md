@@ -184,6 +184,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `minAspectRatio` | `CGFloat`: The minimum allowed aspect ratio (width / height) when `allowAspectRatioResizing` is enabled. Defaults to `0.1`. |
 | `maxAspectRatio` | `CGFloat`: The maximum allowed aspect ratio (width / height) when `allowAspectRatioResizing` is enabled. Defaults to `10.0`. |
 | `dismissesOnCompletion` | `Bool`: Whether the cropping view dismisses itself after the save or cancel button was tapped. Set to `false` if the presenting view handles the dismissal itself. Defaults to `true`. |
+| `showsProgressLayer` | `Bool`: Whether a progress layer is shown while the cropped image is generated. Defaults to `true`. |
 | `progressLayerDelay` | `Duration`: How long cropping must remain in progress before the progress layer is shown. Use a short delay to avoid flashing it for fast crops. Defaults to `.zero`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
 | `fonts` | `Fonts`: Defines custom fonts for the buttons and instructions. Defaults to using system font. |
@@ -200,6 +201,7 @@ let configuration = SwiftyCropConfiguration(
     showsZoomSlider: false,
     zoomSensitivity: 1.0,
     rectAspectRatio: 4/3,
+    showsProgressLayer: true,
     progressLayerDelay: .milliseconds(200),
     texts: SwiftyCropConfiguration.Texts(
         cancelButton: "Cancel",

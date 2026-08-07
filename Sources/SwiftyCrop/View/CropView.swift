@@ -49,7 +49,7 @@ struct CropView: View {
     ZStack {
       cropImageView
       
-      if isCropping {
+      if isCropping && configuration.showsProgressLayer {
         if configuration.progressLayerDelay == .zero {
           ProgressLayer(configuration: configuration, localizableTableName: localizableTableName)
         } else {
