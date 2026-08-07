@@ -334,6 +334,8 @@ Another thanks to [@andrewhanshaw](https://github.com/andrewhanshaw) for overhau
 
 Thanks to [@ezathashim](https://github.com/ezathashim) for adding the zoom slider for input devices without pinch-to-zoom and for making the dismissal optional 🔍
 
+Thanks to [@jacklieblich](https://github.com/jacklieblich) for restoring the configured crop view background and for making the progress layer hideable and delayable ⏳
+
 ## 📃 License
 
 `SwiftyCrop` is available under the MIT license. See the [LICENSE](https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md) file for more info.
