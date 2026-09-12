@@ -5,6 +5,8 @@ import SwiftUI
 public struct SwiftyCropConfiguration {
   public let maxMagnificationScale: CGFloat
   public let maskRadius: CGFloat
+  /// Visual corner radius as a fraction of the rectangular mask height. Output rounding is owned by the caller.
+  public let maskCornerRadiusFraction: CGFloat
   public let cropImageCircular: Bool
   public let rotateImage: Bool
   public let rotateImageWithButtons: Bool
@@ -187,6 +189,7 @@ public struct SwiftyCropConfiguration {
   public init(
     maxMagnificationScale: CGFloat = 4.0,
     maskRadius: CGFloat = 130,
+    maskCornerRadiusFraction: CGFloat = 0,
     cropImageCircular: Bool = false,
     rotateImage: Bool = false,
     rotateImageWithButtons: Bool = false,
@@ -205,6 +208,7 @@ public struct SwiftyCropConfiguration {
   ) {
     self.maxMagnificationScale = maxMagnificationScale
     self.maskRadius = maskRadius
+    self.maskCornerRadiusFraction = min(0.5, max(0, maskCornerRadiusFraction))
     self.cropImageCircular = cropImageCircular
     self.rotateImage = rotateImage
     self.rotateImageWithButtons = rotateImageWithButtons

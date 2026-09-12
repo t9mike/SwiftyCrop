@@ -171,7 +171,7 @@ struct CropView: View {
         .scaleEffect(viewModel.scale)
         .offset(viewModel.offset)
         .mask(
-          MaskShapeView(maskShape: maskShape)
+          MaskShapeView(maskShape: maskShape, cornerRadius: viewModel.maskSize.height * configuration.maskCornerRadiusFraction)
             .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
         )
 
@@ -419,6 +419,7 @@ struct CropView: View {
   // MARK: - Mask Shape View
   private struct MaskShapeView: View {
     let maskShape: MaskShape
+    var cornerRadius: CGFloat = 0
 
     var body: some View {
       Group {
@@ -426,7 +427,7 @@ struct CropView: View {
         case .circle:
           Circle()
         case .square, .rectangle:
-          Rectangle()
+          RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
         }
       }
     }
