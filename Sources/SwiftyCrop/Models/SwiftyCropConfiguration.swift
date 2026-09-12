@@ -11,6 +11,9 @@ public struct SwiftyCropConfiguration {
   public let rotateImage: Bool
   public let rotateImageWithButtons: Bool
   public let showsZoomSlider: Bool
+  /// Fraction of the minimum allowed zoom scale added or removed per button tap.
+  /// A value of 0.05 gives fixed 5% steps independent of the current zoom.
+  public let zoomButtonStep: CGFloat
   public let zoomSensitivity: CGFloat
   public let rectAspectRatio: CGFloat
   public let allowAspectRatioResizing: Bool
@@ -194,6 +197,7 @@ public struct SwiftyCropConfiguration {
     rotateImage: Bool = false,
     rotateImageWithButtons: Bool = false,
     showsZoomSlider: Bool = false,
+    zoomButtonStep: CGFloat = 0.05,
     zoomSensitivity: CGFloat = 1,
     rectAspectRatio: CGFloat = 4/3,
     allowAspectRatioResizing: Bool = false,
@@ -213,6 +217,7 @@ public struct SwiftyCropConfiguration {
     self.rotateImage = rotateImage
     self.rotateImageWithButtons = rotateImageWithButtons
     self.showsZoomSlider = showsZoomSlider
+    self.zoomButtonStep = max(0, zoomButtonStep)
     self.zoomSensitivity = zoomSensitivity
     self.rectAspectRatio = rectAspectRatio
     self.allowAspectRatioResizing = allowAspectRatioResizing

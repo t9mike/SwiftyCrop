@@ -14,7 +14,7 @@ typealias PlatformImage = NSImage
 class CropViewModel: ObservableObject {
     private let maskRadius: CGFloat
     private let maxMagnificationScale: CGFloat // The maximum allowed scale factor for image magnification.
-    private let maskShape: MaskShape // The shape of the mask used for cropping.
+    private var maskShape: MaskShape // The shape of the mask used for cropping.
     var rectAspectRatio: CGFloat // The aspect ratio for rectangular masks.
     private let minAspectRatio: CGFloat // The minimum allowed aspect ratio when resizing a rectangle mask.
     private let maxAspectRatio: CGFloat // The maximum allowed aspect ratio when resizing a rectangle mask.
@@ -57,13 +57,8 @@ class CropViewModel: ObservableObject {
             let diameter = min(maskRadius * 2, min(size.width, size.height))
             maskSize = CGSize(width: diameter, height: diameter)
         case .rectangle:
-            let maxWidth = min(size.width, maskRadius * 2)
-            let maxHeight = min(size.height, maskRadius * 2)
-            if maxWidth / maxHeight > rectAspectRatio {
-                maskSize = CGSize(width: maxHeight * rectAspectRatio, height: maxHeight)
-            } else {
-                maskSize = CGSize(width: maxWidth, height: maxWidth / rectAspectRatio)
-            }
+            let height = min(maskRadius * 2, size.height, size.width / rectAspectRatio)
+            maskSize = CGSize(width: height * rectAspectRatio, height: height)
         }
     }
     
@@ -76,6 +71,23 @@ class CropViewModel: ObservableObject {
         updateMaskSize(for: imageSizeInView)
         lastMaskHeight = maskSize.height
         lastMaskWidth = maskSize.width
+    }
+
+    /// Changes only the centered mask, retaining the user's zoom, pan, and rotation.
+    /// Near an image edge, reduce the mask rather than moving or zooming the image.
+    func updateMaskShape(_ shape: MaskShape, aspectRatio: CGFloat) {
+        maskShape = shape
+        rectAspectRatio = max(0.01, aspectRatio)
+        guard imageSizeInView.width > 0, imageSizeInView.height > 0 else { return }
+        let ratio: CGFloat = shape == .rectangle ? rectAspectRatio : 1
+        let height = maskSize.height
+        maskSize = CGSize(width: height * ratio, height: height)
+        let availableWidth = max(0, imageSizeInView.width * scale - 2 * abs(offset.width))
+        let availableHeight = max(0, imageSizeInView.height * scale - 2 * abs(offset.height))
+        let fit = min(1, availableWidth / maskSize.width, availableHeight / maskSize.height)
+        maskSize = CGSize(width: maskSize.width * fit, height: maskSize.height * fit)
+        lastMaskWidth = maskSize.width
+        lastMaskHeight = maskSize.height
     }
 
     /**
@@ -138,6 +150,12 @@ class CropViewModel: ObservableObject {
         return (minScale, maxMagnificationScale)
     }
     
+    /// A fixed step based on minimum zoom, not the current zoom level.
+    func zoomButtonScaleStep(fraction: CGFloat) -> CGFloat {
+        guard imageSizeInView.width > 0, imageSizeInView.height > 0 else { return 0 }
+        return calculateMagnificationGestureMaxValues().0 * max(0, fraction)
+    }
+
     /**
      Crops the given image to a rectangle based on the current mask size and position.
      - Parameter image: The PlatformImage to crop.

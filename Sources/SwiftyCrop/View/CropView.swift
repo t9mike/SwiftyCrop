@@ -66,7 +66,7 @@ struct CropView: View {
     }
     // Scrolls the view up slightly so the blurred background of the toolbar is shown on a non-scrolling view
     // Helps with contrast between the toolbar title and the content behind it
-    .scrollOffsetToolbarTrigger()
+    .scrollOffsetToolbarTrigger(enabled: topAccessory == nil)
     .background(configuration.colors.background)
     .toolbar {
       toolbarView
@@ -74,8 +74,20 @@ struct CropView: View {
     .safeAreaInset(edge: .top, spacing: 0) {
       topAccessory
     }
+    .onChange(of: maskSelection) { selection in
+      viewModel.updateMaskShape(selection.shape, aspectRatio: selection.ratio)
+    }
   }
   
+  private struct MaskSelection: Equatable {
+    let shape: MaskShape
+    let ratio: CGFloat
+  }
+
+  private var maskSelection: MaskSelection {
+    MaskSelection(shape: maskShape, ratio: configuration.rectAspectRatio)
+  }
+
   // MARK: - Gestures
   private var magnificationGesture: some Gesture {
     MagnificationGesture()
@@ -202,8 +214,16 @@ struct CropView: View {
   /// (mouse, VoiceOver, Switch Control, Full Keyboard Access).
   private func zoomSlider(scaleRange: ClosedRange<CGFloat>) -> some View {
     HStack(spacing: 8) {
-      Image(systemName: "minus.magnifyingglass")
-        .accessibilityHidden(true)
+      Button {
+        setScale(viewModel.scale - viewModel.zoomButtonScaleStep(fraction: configuration.zoomButtonStep))
+      } label: {
+        Image(systemName: "minus.magnifyingglass")
+          .frame(minWidth: 36, minHeight: 44)
+          .contentShape(Rectangle())
+      }
+      .buttonStyle(.plain)
+      .disabled(viewModel.scale <= scaleRange.lowerBound)
+      .accessibilityLabel(Text("Zoom out", bundle: .module))
 
       Slider(
         value: Binding(
@@ -215,8 +235,16 @@ struct CropView: View {
       .frame(minWidth: 120, idealWidth: 160, maxWidth: 240)
       .accessibilityLabel(zoomSliderLabel)
 
-      Image(systemName: "plus.magnifyingglass")
-        .accessibilityHidden(true)
+      Button {
+        setScale(viewModel.scale + viewModel.zoomButtonScaleStep(fraction: configuration.zoomButtonStep))
+      } label: {
+        Image(systemName: "plus.magnifyingglass")
+          .frame(minWidth: 36, minHeight: 44)
+          .contentShape(Rectangle())
+      }
+      .buttonStyle(.plain)
+      .disabled(viewModel.scale >= scaleRange.upperBound)
+      .accessibilityLabel(Text("Zoom in", bundle: .module))
     }
     .padding(.horizontal, 8)
     .foregroundStyle(configuration.colors.zoomSlider)

@@ -76,6 +76,7 @@ public struct SwiftyCropView: View {
                 onCancel: onCancel,
                 onComplete: onComplete
             )
+            .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea(.container, edges: topAccessory == nil ? .top : []) // Accessories stay below the navigation bar.
         }
         #else

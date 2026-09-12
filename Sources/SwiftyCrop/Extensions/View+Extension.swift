@@ -61,10 +61,14 @@ extension View {
 
   // Scroll offset toolbar trigger extension. Only applies to iOS 26+
   @ViewBuilder
-  func scrollOffsetToolbarTrigger() -> some View {
+  func scrollOffsetToolbarTrigger(enabled: Bool = true) -> some View {
     if #available(iOS 26, visionOS 26.0, macOS 26.0, *) {
       #if os(iOS)
-        self.modifier(ScrollOffsetToolbarTriggerModifier())
+        if enabled {
+          self.modifier(ScrollOffsetToolbarTriggerModifier())
+        } else {
+          self
+        }
       #else
         self
       #endif
