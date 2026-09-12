@@ -12,11 +12,13 @@ import AppKit
 /// - Parameters:
 ///   - imageToCrop: The image to be cropped.
 ///   - maskShape: The shape of the mask used for cropping.
+///   - topAccessory: Optional controls placed below the navigation toolbar, inside the safe area.
 ///   - configuration: The configuration for the cropping behavior. If nothing is specified, the default is used.
 ///   - onCancel: An optional closure that's called when the cropping is cancelled.
 ///   - onComplete: A closure that's called when the cropping is complete. This closure returns the cropped image.
 ///     If an error occurs the return value is nil.
 public struct SwiftyCropView: View {
+    private let topAccessory: AnyView?
     private let maskShape: MaskShape
     private let configuration: SwiftyCropConfiguration
     private let onCancel: (@MainActor () -> Void)?
@@ -28,10 +30,12 @@ public struct SwiftyCropView: View {
     public init(
         imageToCrop: UIImage,
         maskShape: MaskShape,
+        topAccessory: AnyView? = nil,
         configuration: SwiftyCropConfiguration = SwiftyCropConfiguration(),
         onCancel: (@MainActor () -> Void)? = nil,
         onComplete: @escaping @MainActor (UIImage?) -> Void
     ) {
+        self.topAccessory = topAccessory
         self.imageToCrop = imageToCrop
         self.maskShape = maskShape
         self.configuration = configuration
@@ -45,10 +49,12 @@ public struct SwiftyCropView: View {
     public init(
         imageToCrop: NSImage,
         maskShape: MaskShape,
+        topAccessory: AnyView? = nil,
         configuration: SwiftyCropConfiguration = SwiftyCropConfiguration(),
         onCancel: (@MainActor () -> Void)? = nil,
         onComplete: @escaping @MainActor (NSImage?) -> Void
     ) {
+        self.topAccessory = topAccessory
         self.imageToCrop = imageToCrop
         self.maskShape = maskShape
         self.configuration = configuration
@@ -65,11 +71,12 @@ public struct SwiftyCropView: View {
             CropView(
                 image: imageToCrop,
                 maskShape: maskShape,
+                topAccessory: topAccessory,
                 configuration: configuration,
                 onCancel: onCancel,
                 onComplete: onComplete
             )
-            .ignoresSafeArea(.container, edges: .top) // Centers view between the toolbar and  the bottom of the screen
+            .ignoresSafeArea(.container, edges: topAccessory == nil ? .top : []) // Accessories stay below the navigation bar.
         }
         #else
         // On macOS the consumer provides a NavigationStack via navigationDestination;
@@ -77,6 +84,7 @@ public struct SwiftyCropView: View {
         CropView(
             image: imageToCrop,
             maskShape: maskShape,
+            topAccessory: topAccessory,
             configuration: configuration,
             onCancel: onCancel,
             onComplete: onComplete

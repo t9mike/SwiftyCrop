@@ -12,6 +12,7 @@ struct CropView: View {
   @State private var activeDragStart: CGPoint? = nil
   @State private var activeHandleEdge: HandleEdge? = nil
 
+  private let topAccessory: AnyView?
   private let image: PlatformImage
   private let maskShape: MaskShape
   private let configuration: SwiftyCropConfiguration
@@ -22,10 +23,12 @@ struct CropView: View {
   init(
     image: PlatformImage,
     maskShape: MaskShape,
+    topAccessory: AnyView? = nil,
     configuration: SwiftyCropConfiguration,
     onCancel: (@MainActor () -> Void)? = nil,
     onComplete: @escaping @MainActor (PlatformImage?) -> Void
   ) {
+    self.topAccessory = topAccessory
     self.image = image
     self.maskShape = maskShape
     self.configuration = configuration
@@ -67,6 +70,9 @@ struct CropView: View {
     .background(configuration.colors.background)
     .toolbar {
       toolbarView
+    }
+    .safeAreaInset(edge: .top, spacing: 0) {
+      topAccessory
     }
   }
   
