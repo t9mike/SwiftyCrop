@@ -80,6 +80,45 @@ final class CropGeometryTests: XCTestCase {
     XCTAssertEqual(Self.seamRelativeX(of: bitmap), 0.5, accuracy: 0.02)
   }
 
+  func testWindowShrinkClampsZoomAndPanToTheNewImageBounds() {
+    let viewModel = Self.makeViewModel()
+    viewModel.updateMaskDimensions(for: CGSize(width: 600, height: 1200))
+    viewModel.scale = 0.5
+    viewModel.lastScale = 0.5
+    viewModel.offset = CGSize(width: 20, height: 170)
+
+    viewModel.updateMaskDimensions(for: CGSize(width: 200, height: 400))
+
+    XCTAssertEqual(viewModel.maskSize, CGSize(width: 200, height: 200))
+    XCTAssertEqual(viewModel.scale, 1)
+    XCTAssertEqual(viewModel.lastScale, 1)
+    XCTAssertEqual(viewModel.offset, CGSize(width: 0, height: 100))
+    XCTAssertEqual(viewModel.lastOffset, viewModel.offset)
+  }
+
+  func testTransientZeroLayoutDoesNotInvalidateCropGeometry() {
+    let viewModel = Self.makeViewModel()
+    viewModel.updateMaskDimensions(for: CGSize(width: 300, height: 600))
+    viewModel.updateMaskDimensions(for: .zero)
+
+    XCTAssertEqual(viewModel.imageSizeInView, CGSize(width: 300, height: 600))
+    XCTAssertEqual(viewModel.maskSize, CGSize(width: 260, height: 260))
+    XCTAssertTrue(viewModel.calculateMagnificationGestureMaxValues().0.isFinite)
+  }
+
+  func testCropAfterWindowResizeMatchesCurrentViewport() throws {
+    let image = try XCTUnwrap(Self.makeSplitImage(pixelsWide: 800, pixelsHigh: 600, dpi: 144))
+    let viewModel = Self.makeViewModel()
+    viewModel.updateMaskDimensions(for: CGSize(width: 800, height: 600))
+    viewModel.updateMaskDimensions(for: CGSize(width: 200, height: 150))
+
+    let cropped = try XCTUnwrap(viewModel.cropToSquare(image))
+    let bitmap = try XCTUnwrap(Self.cgImage(of: cropped))
+    XCTAssertEqual(bitmap.width, 600)
+    XCTAssertEqual(bitmap.height, 600)
+    XCTAssertEqual(Self.seamRelativeX(of: bitmap), 0.5, accuracy: 0.01)
+  }
+
   // MARK: - Helpers
 
   private static func makeViewModel() -> CropViewModel {

@@ -67,7 +67,7 @@ public struct SwiftyCropView: View {
         #if canImport(UIKit)
         // On iOS/visionOS the view is typically presented in a sheet or fullScreenCover,
         // so it owns its navigation context.
-        NavigationView {
+        NavigationStack {
             CropView(
                 image: imageToCrop,
                 maskShape: maskShape,
@@ -77,7 +77,6 @@ public struct SwiftyCropView: View {
                 onComplete: onComplete
             )
             .navigationBarTitleDisplayMode(.inline)
-            .ignoresSafeArea(.container, edges: topAccessory == nil ? .top : []) // Accessories stay below the navigation bar.
         }
         #else
         // On macOS the consumer provides a NavigationStack via navigationDestination;
@@ -92,4 +91,14 @@ public struct SwiftyCropView: View {
         )
         #endif
     }
+}
+
+#Preview {
+    #if canImport(UIKit)
+    SwiftyCropView(imageToCrop: UIImage(systemName: "photo")!, maskShape: .circle) { _ in }
+    #else
+    NavigationStack {
+        SwiftyCropView(imageToCrop: NSImage(systemSymbolName: "photo", accessibilityDescription: nil)!, maskShape: .circle) { _ in }
+    }
+    #endif
 }

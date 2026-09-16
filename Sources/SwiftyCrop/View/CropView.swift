@@ -172,17 +172,9 @@ struct CropView: View {
         .scaleEffect(viewModel.scale)
         .offset(viewModel.offset)
         .opacity(0.5)
-        .overlay(
-          GeometryReader { geometry in
-            Color.clear
-              .onAppear {
-                viewModel.updateMaskDimensions(for: geometry.size)
-              }
-              .onSizeChange { newSize in
-                viewModel.updateMaskDimensions(for: newSize)
-              }
-          }
-        )
+        .onSizeChange { newSize in
+          viewModel.updateMaskDimensions(for: newSize)
+        }
 
       PlatformImageView(image: image)
         .rotationEffect(viewModel.angle)
@@ -198,13 +190,7 @@ struct CropView: View {
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(
-      GeometryReader { geo in
-        Color.clear
-          .onAppear { containerSize = geo.size }
-          .onSizeChange { newSize in containerSize = newSize }
-      }
-    )
+    .onSizeChange { containerSize = $0 }
     .simultaneousGesture(magnificationGesture)
     .simultaneousGesture(dragGesture)
     .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
@@ -573,6 +559,18 @@ struct PlatformImageView: View {
     Image(nsImage: image)
       .resizable()
       .scaledToFit()
+    #endif
+  }
+}
+
+#Preview {
+  NavigationStack {
+    #if canImport(UIKit)
+    CropView(image: UIImage(systemName: "photo")!, maskShape: .circle,
+             configuration: SwiftyCropConfiguration(showsZoomSlider: true)) { _ in }
+    #else
+    CropView(image: NSImage(systemSymbolName: "photo", accessibilityDescription: nil)!, maskShape: .circle,
+             configuration: SwiftyCropConfiguration(showsZoomSlider: true)) { _ in }
     #endif
   }
 }

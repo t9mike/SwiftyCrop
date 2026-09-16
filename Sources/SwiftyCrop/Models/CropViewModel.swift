@@ -67,10 +67,20 @@ class CropViewModel: ObservableObject {
      - Parameter imageSizeInView: The size of the image as displayed in the view.
      */
     func updateMaskDimensions(for imageSizeInView: CGSize) {
+        guard imageSizeInView.width > 0, imageSizeInView.height > 0,
+              imageSizeInView != self.imageSizeInView else { return }
         self.imageSizeInView = imageSizeInView
         updateMaskSize(for: imageSizeInView)
         lastMaskHeight = maskSize.height
         lastMaskWidth = maskSize.width
+        // Resizing a window changes the fitted image and the valid zoom/pan bounds.
+        clampScaleToMask()
+        let limits = calculateDragGestureMax()
+        offset = CGSize(
+            width: min(max(offset.width, -limits.x), limits.x),
+            height: min(max(offset.height, -limits.y), limits.y)
+        )
+        lastOffset = offset
     }
 
     /// Changes only the centered mask, retaining the user's zoom, pan, and rotation.
